@@ -78,6 +78,16 @@ AzureActivity
 
 ![Log de exclusão do resource group de teste, batendo com a lógica da regra](./screenshots/09-teste-deteccao-log-delete-encontrado.png)
 
+Após o ciclo agendado, o Incident foi gerado automaticamente pelo Sentinel.
+
+![Incidente gerado automaticamente, recém-criado](./screenshots/10-incidente-gerado-automaticamente.png)
+
+O incidente foi atribuído e movido para status "Ativo" durante a investigação, e posteriormente fechado com a classificação "Benign Positive - Suspeito, mas esperado", já que se tratava de uma exclusão simulada para validar a regra.
+
+![Incidente atribuído e em investigação](./screenshots/11-incidente-em-triagem.png)
+
+![Incidente fechado com classificação Benign Positive](./screenshots/12-incidente-fechado-benign-positive.png)
+
 ### 5. Workbook
 Pasta de trabalho baseada no modelo "Azure Activity", exibindo os top resource groups ativos e o volume de atividades ao longo do tempo, filtrável por período, autor (Caller) e resource group.
 
