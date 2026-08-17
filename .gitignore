@@ -1,0 +1,20 @@
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos de editor / IDE
+.vscode/
+*.swp
+*.swo
+
+# Arquivos temporários
+*.tmp
+*.bak
+*.log
+
+# Credenciais / segredos (nunca versionar!)
+*.env
+*.pem
+*.key
+credentials.json
