@@ -1,1 +1,3 @@
-
+AzureActivity
+| where OperationNameValue == "MICROSOFT.RESOURCES/SUBSCRIPTIONS/RESOURCEGROUPS/DELETE"
+| where ActivityStatusValue == "Success"
