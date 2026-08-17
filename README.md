@@ -43,7 +43,12 @@ O conector Azure Activity não fica ativo apenas ao ser "instalado" pelo Hub de 
 
 **Problema encontrado:** na primeira tentativa, o escopo da política foi definido incorretamente no nível do Resource Group (`rg-sentinel-lab`) em vez da assinatura inteira. Como o Log de Atividades é um recurso em nível de assinatura, a política nunca encontrou um recurso aplicável (indicador: "0 de 0" recursos na tela de Conformidade).
 
+![Escopo correto da política, aplicado à assinatura inteira](./screenshots/03-atribuicao-escopo-correto-assinatura.png)
+
 **Solução:** as atribuições incorretas foram excluídas e uma nova atribuição foi criada com o escopo correto (a assinatura `Azure for Students` inteira). Após rodar a tarefa de correção, o conector passou a mostrar status **Conectado**, com dados fluindo para o workspace.
+
+![Conector Azure Activity com status Conectado](./screenshots/05-conector-status-conectado.png)
+
 
 ### 3. Investigação com KQL
 Exploração inicial dos dados ingeridos — veja a pasta [`kql-queries/`](./kql-queries):
@@ -71,8 +76,12 @@ AzureActivity
 
 **Validação:** foi criado um resource group descartável (`rg-teste-delete`), em seguida excluído propositalmente. O log da exclusão foi localizado em Logs, confirmando que os campos (`OperationNameValue`, `ActivityStatusValue`) batiam exatamente com a lógica da regra — validando a detecção antes mesmo da execução do ciclo agendado.
 
+![Log de exclusão do resource group de teste, batendo com a lógica da regra](./screenshots/09-teste-deteccao-log-delete-encontrado.png)
+
 ### 5. Workbook
 Pasta de trabalho baseada no modelo "Azure Activity", exibindo os top resource groups ativos e o volume de atividades ao longo do tempo, filtrável por período, autor (Caller) e resource group.
+
+![Workbook Azure Activity com dados reais do lab](./screenshots/08-workbook-azure-activity.png)
 
 ## 🖼️ Evidências
 
