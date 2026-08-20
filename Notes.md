@@ -100,52 +100,6 @@ Fechei 15 incidentes em lote como duplicatas, triei o restante como Benign Posit
 Workbook criado:
 
 "Visão Geral - Atividade da Assinatura" com 3 gráficos: top operações, top callers, linha do tempo
-PARTE 2 — Guia completo: subindo tudo para o GitHub
 
-Estes comandos assumem que você já tem o repositório sentinel-siem-lab clonado na sua máquina (a mesma pasta que você usou na Fase 1). Abra o terminal (Prompt de Comando, PowerShell, ou Git Bash) dentro dessa pasta do repositório.
-
-Passo 1 — Confirmar que está na pasta certa
-bash
-cd caminho/para/sentinel-siem-lab
-
-Troque caminho/para/ pelo caminho real na sua máquina. Se não souber, abra a pasta no Explorador de Arquivos, clique com o botão direito dentro dela e escolha "Abrir no Terminal" ou "Git Bash Here" (se tiver essa opção instalada).
-
-Passo 2 — Verificar o que vai ser enviado
-bash
-git status
-
-Isso lista todos os arquivos novos ou modificados. Você deve ver:
-
-README.md (modificado)
-notes.md (modificado)
-A nova pasta screenshots/entra-id-expansion/ com as 9 imagens (arquivos novos, aparecem em vermelho ou como "Untracked")
-
-Se algum desses arquivos não aparecer na lista, é sinal de que ele não foi salvo na pasta certa — confira antes de continuar.
-
-Passo 3 — Adicionar os arquivos ao commit
-bash
-git add .
-
-O . significa "adicionar tudo que mudou nesta pasta". Depois, rode git status de novo — os arquivos devem aparecer em verde agora ("Changes to be committed").
-
-Passo 4 — Criar o commit (o "pacote" de mudanças)
-bash
-git commit -m "Adiciona investigacao do conector Entra ID, integracao com Defender for Cloud e nova analytics rule"
-
-A mensagem entre aspas é obrigatória — é o resumo do que mudou. Pode usar essa mesma frase, ou escrever a sua.
-
-Passo 5 — Enviar para o GitHub
-bash
-git push
-
-Se pedir usuário/senha do GitHub e a senha normal não funcionar, é porque o GitHub exige um "Personal Access Token" em vez de senha — nesse caso, me avise que te explico como gerar um.
-
-Passo 6 — Confirmar no navegador
-
-Abra o repositório no GitHub (github.com/seu-usuario/sentinel-siem-lab) e atualize a página. Você deve ver:
-
-O commit mais recente com a mensagem do Passo 4
-A pasta screenshots/entra-id-expansion/ com as 9 imagens
-O README.md e notes.md atualizados
 
 Se algo não aparecer como esperado, me manda um print da tela do terminal (com os comandos e o resultado) que eu te ajudo a diagnosticar.
