@@ -109,7 +109,9 @@ Veja a pasta [`screenshots/`](./screenshots) para prints de cada etapa: workspac
 
 `Microsoft Sentinel` `Azure Log Analytics` `Azure Policy` `KQL` `Azure Portal`
 
-Fase 2: Expansão — Microsoft Entra ID e Defender for Cloud
+
+---
+## Fase 2: Expansão — Microsoft Entra ID e Defender for Cloud
 
 Depois de concluir o lab inicial, o objetivo desta fase era conectar o Microsoft Entra ID como fonte de dados no Sentinel. No processo, esbarrei em uma limitação real de ambiente — e documentei isso como parte do aprendizado, em vez de simplesmente descartar a tentativa.
 
@@ -119,11 +121,11 @@ Ao tentar habilitar o conector do Entra ID, o Sentinel bloqueou a conexão com o
 
 O cliente heitor.francisco@cs.cruzeirodosul.edu.br não tem autorização para executar a ação microsoft.aadiam/diagnosticSettings/read.
 
-[Mostrar Imagem](./entra-id-expansion/02-entra-id-connector-error-prerequisites.png)
+![Conector do Entra ID](./entra-id-expansion/02-entra-id-connector-error-prerequisites.png)
 
 Causa raiz: minha conta Azure for Students está dentro do tenant institucional da minha universidade (Cruzeiro do Sul), no qual meu usuário não tem a role Global Administrator nem Security Administrator — pré- requisitos obrigatórios para habilitar os Diagnostic Settings do Entra ID.
 
-[Mostrar Imagem](./entra-id-expansion/01-entra-id-permission-denied-check.png)
+![Permissão do Entra ID negada devido ao role do Tenant](./entra-id-expansion/01-entra-id-permission-denied-check.png)
 
 Confirmei que essa é uma limitação conhecida e documentada da conta Azure for Students (não um erro de configuração meu) através de um caso idêntico relatado no Microsoft Q&A oficial. A alternativa recomendada pela própria Microsoft — criar um tenant Entra ID próprio, onde eu seria admin por padrão — não era viável no meu caso por exigir uma assinatura Azure vinculada, o que por sua vez exige cartão de crédito (que eu não tenho).
 
@@ -133,7 +135,7 @@ Tentativa 2: Microsoft Defender for Cloud
 
 Instalei a solution "Microsoft Defender for Cloud" via Content Hub e conectei o conector Subscription-based Microsoft Defender for Cloud (Legacy), usando apenas o plano gratuito ("Foundational CSPM" / "GPSN básico") para evitar qualquer custo.
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/03-defender-for-cloud-connected-successfully.png)
+![Conector Hub Defender for Cloud](./entra-id-expansion/03-defender-for-cloud-connected-successfully.png)
 
 Isso revelou uma segunda limitação: o plano gratuito gera recomendações de postura de segurança, mas não gera Security Alerts — que é justamente o tipo de dado que esse conector envia ao Sentinel. Confirmei isso via KQL na tabela SecurityAlerts, que retornou zero eventos ao longo de vários dias:
 
@@ -141,7 +143,7 @@ kql
 SecurityAlerts
 | take 100
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/04-security-alerts-empty-free-tier-limitation.png)
+![Alertas vazios devido a limitação de Role do Tenant](./entra-id-expansion/04-security-alerts-empty-free-tier-limitation.png)
 
 Alertas de verdade exigem um plano pago (ex: Defender for Servers), o que novamente esbarrava na limitação do cartão de crédito.
 
@@ -155,7 +157,7 @@ AzureActivity
 | summarize count() by Caller, bin(TimeGenerated, 1h)
 | where count_ >= 1
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/05-second-analytics-rule-created.png)
+![Criação da segunda regra do Analytics](./entra-id-expansion/05-second-analytics-rule-created.png)
 
 Lição técnica: minha primeira tentativa de regra observava MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE, mas descobri (testando com AzureActivity | where OperationNameValue has "PRICINGS") que alternar planos do Defender gera na verdade MICROSOFT.SECURITY/PRICINGS/WRITE — uma operação diferente. Ajustei a query da regra de acordo.
 
@@ -163,17 +165,17 @@ Cuidado com custo: plano pago ativado por engano
 
 Durante os testes, percebi que havia ativado por engano o plano PAGO ("GPSN do Defender", $5/recurso/mês) em vez do gratuito. Como não tenho cartão de crédito cadastrado, isso representava um risco real — mesmo sem custo imediato (0 recursos na assinatura), desativei o plano pago imediatamente como boa prática de FinOps/governança de custos em nuvem.
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/06-defender-paid-plan-safety-check.png)
+![Plano Defender for Cloud - GPSN - Desativado](./entra-id-expansion/06-defender-paid-plan-safety-check.png)
 
 Tuning da regra: identificando e corrigindo alert flooding
 
 Ao ajustar temporariamente a janela de lookback da regra para 24 horas (para capturar eventos de teste mais antigos), a regra passou a reavaliar repetidamente os mesmos 2 eventos a cada execução horária, sem supressão configurada — gerando 16 incidentes duplicados para o mesmo evento real.
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/07-incidents-duplicated-alert-flooding.png)
+![Incidentes Duplicados devido a regra de 24h](./entra-id-expansion/07-incidents-duplicated-alert-flooding.png)
 
 Esse é um problema clássico de tuning em ambientes SIEM (fadiga de alerta). Corrigi revertendo o lookback para 1 hora (alinhado com a frequência de execução da regra), fechei 15 incidentes em lote como duplicatas, e triei o incidente restante normalmente:
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/08-incident-triaged-benign-positive.png)
+![Incidente de Triagem Bening Positive](./entra-id-expansion/08-incident-triaged-benign-positive.png)
 
 Workbook: Visão Geral — Atividade da Assinatura
 
@@ -183,7 +185,7 @@ Top 10 operações mais frequentes (OperationNameValue)
 Top 10 usuários/callers mais ativos
 Linha do tempo de atividade por dia
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/09-workbook-created.png)
+![Criação do Workbook](./entra-id-expansion/09-workbook-created.png)
 
 Resumo das habilidades demonstradas nesta fase
 Diagnóstico de erros de permissão RBAC/Entra ID e leitura de mensagens de erro técnicas
@@ -193,8 +195,10 @@ Debugging de Analytics Rules via KQL (Test with current data)
 Identificação e correção de alert flooding/duplicação de incidentes
 Triagem completa de incidentes (atribuição, investigação, fechamento com classificação)
 Criação de Workbooks customizados no Microsoft Sentinel
+
 ---
 ---
+
 ## 🛠️ Tecnologias
 
 `Microsoft Sentinel' `Azure Log Analytics` `Azure Entra ID` `Azure Defender for Cloud` `KQL` `Azure Portal`
