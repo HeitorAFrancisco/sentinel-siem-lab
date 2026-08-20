@@ -119,11 +119,11 @@ Ao tentar habilitar o conector do Entra ID, o Sentinel bloqueou a conexão com o
 
 O cliente heitor.francisco@cs.cruzeirodosul.edu.br não tem autorização para executar a ação microsoft.aadiam/diagnosticSettings/read.
 
-[Mostrar Imagem](./screenshots/entra-id-expansion/02-entra-id-connector-error-prerequisites.png)
+[Mostrar Imagem](./entra-id-expansion/02-entra-id-connector-error-prerequisites.png)
 
 Causa raiz: minha conta Azure for Students está dentro do tenant institucional da minha universidade (Cruzeiro do Sul), no qual meu usuário não tem a role Global Administrator nem Security Administrator — pré- requisitos obrigatórios para habilitar os Diagnostic Settings do Entra ID.
 
-[Mostrar Imagem](https://claude.ai/chat/screenshots/entra-id-expansion/01-entra-id-permission-denied-check.png)
+[Mostrar Imagem](./entra-id-expansion/01-entra-id-permission-denied-check.png)
 
 Confirmei que essa é uma limitação conhecida e documentada da conta Azure for Students (não um erro de configuração meu) através de um caso idêntico relatado no Microsoft Q&A oficial. A alternativa recomendada pela própria Microsoft — criar um tenant Entra ID próprio, onde eu seria admin por padrão — não era viável no meu caso por exigir uma assinatura Azure vinculada, o que por sua vez exige cartão de crédito (que eu não tenho).
 
