@@ -189,14 +189,14 @@ Linha do tempo de atividade por dia
 
 ![Criação do Workbook](./entra-id-expansion/Screenshots/09-workbook-created.png)
 
-Resumo das habilidades demonstradas nesta fase
-Diagnóstico de erros de permissão RBAC/Entra ID e leitura de mensagens de erro técnicas
-Pesquisa e validação de limitações de ambiente contra documentação oficial e fóruns da comunidade
-Consciência de custos em nuvem (FinOps) — identificação e correção de um plano pago ativado por engano
-Debugging de Analytics Rules via KQL (Test with current data)
-Identificação e correção de alert flooding/duplicação de incidentes
-Triagem completa de incidentes (atribuição, investigação, fechamento com classificação)
-Criação de Workbooks customizados no Microsoft Sentinel
+## Resumo das habilidades demonstradas nesta fase
+- Diagnóstico de erros de permissão RBAC/Entra ID e leitura de mensagens de erro técnicas
+- Pesquisa e validação de limitações de ambiente contra documentação oficial e fóruns da comunidade
+- Consciência de custos em nuvem (FinOps) — identificação e correção de um plano pago ativado por engano
+- Debugging de Analytics Rules via KQL (Test with current data)
+- Identificação e correção de alert flooding/duplicação de incidentes
+- Triagem completa de incidentes (atribuição, investigação, fechamento com classificação)
+- Criação de Workbooks customizados no Microsoft Sentinel
 
 ---
 ---
