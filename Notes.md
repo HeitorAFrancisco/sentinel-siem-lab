@@ -102,4 +102,3 @@ Workbook criado:
 "Visão Geral - Atividade da Assinatura" com 3 gráficos: top operações, top callers, linha do tempo
 
 
-Se algo não aparecer como esperado, me manda um print da tela do terminal (com os comandos e o resultado) que eu te ajudo a diagnosticar.
