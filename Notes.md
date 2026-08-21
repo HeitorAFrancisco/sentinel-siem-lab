@@ -57,48 +57,48 @@
 
 ---
 
-## [20/08/2026] — Fase 2: Entra ID e Defender for Cloud
+# [20/08/2026] — Fase 2: Entra ID e Defender for Cloud
 
-Objetivo: conectar o Microsoft Entra ID como fonte de dados no Sentinel.
+## Objetivo: conectar o Microsoft Entra ID como fonte de dados no Sentinel.
 
-O que tentei primeiro:
+## O que tentei primeiro:
 
-Abri o conector "Microsoft Entra ID" em Data Connectors
-Erro: Client 'heitor.francisco@cs.cruzeirodosul.edu.br' does not have authorization to perform action 'microsoft.aadiam/diagnosticSettings/read'
-Causa: minha conta está no tenant institucional da faculdade (Cruzeiro do Sul), onde não tenho a role Global Administrator nem Security Administrator
+- Abri o conector "Microsoft Entra ID" em Data Connectors
+- Erro: Client 'heitor.francisco@cs.cruzeirodosul.edu.br' does not have authorization to perform action 'microsoft.aadiam/diagnosticSettings/read'
+- Causa: minha conta está no tenant institucional da faculdade (Cruzeiro do Sul), onde não tenho a role Global Administrator nem Security Administrator
 
-Pesquisa de validação:
+## Pesquisa de validação:
 
-Busquei no Microsoft Q&A e encontrei um caso idêntico de outro estudante com Azure for Students
-Confirmado: essa é uma limitação conhecida da conta, não um erro de configuração meu
-Alternativa sugerida pela Microsoft (criar tenant próprio) não é viável sem cartão de crédito
+- Busquei no Microsoft Q&A e encontrei um caso idêntico de outro estudante com Azure for Students
+- Confirmado: essa é uma limitação conhecida da conta, não um erro de configuração meu
+- Alternativa sugerida pela Microsoft (criar tenant próprio) não é viável sem cartão de crédito
 
-Pivot para Defender for Cloud:
+## Mudança para Defender for Cloud:
 
-Instalei a solution via Content Hub
-Conectei "Subscription-based Microsoft Defender for Cloud (Legacy)"
-Habilitei só o plano gratuito (Foundational CSPM / "GPSN básico")
-Descobri que o plano gratuito não gera SecurityAlerts (só recomendações de postura) — confirmado via KQL: SecurityAlerts | take 100 retornou 0 resultados
+- Instalei a solution via Content Hub
+- Conectei "Subscription-based Microsoft Defender for Cloud (Legacy)"
+- Habilitei só o plano gratuito (Foundational CSPM / "GPSN básico")
+- Descobri que o plano gratuito não gera SecurityAlerts (só recomendações de postura) — confirmado via KQL: SecurityAlerts | take 100 retornou 0 resultados
 
-Terceira Analytics Rule:
+## Terceira Analytics Rule:
 
-Primeira versão da query observava MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE — não funcionou
-Debug: rodei AzureActivity | where OperationNameValue has "PRICINGS" | take 20 e descobri que alternar planos do Defender gera MICROSOFT.SECURITY/PRICINGS/WRITE
-Corrigi a query da regra para usar essa operação
+- Primeira versão da query observava MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE — não funcionou
+- Debug: rodei AzureActivity | where OperationNameValue has "PRICINGS" | take 20 e descobri que alternar planos do Defender gera MICROSOFT.SECURITY/PRICINGS/WRITE
+- Corrigi a query da regra para usar essa operação
 
-Incidente de custo evitado:
+## Incidente de custo evitado:
 
-Durante o teste, ativei sem querer o plano PAGO do Defender ("GPSN do Defender", $5/recurso/mês) em vez do gratuito
-Desativei imediatamente (0 recursos na assinatura = sem cobrança gerada, mas corrigido por precaução)
+- Durante o teste, ativei sem querer o plano PAGO do Defender ("GPSN do Defender", $5/recurso/mês) em vez do gratuito
+- Desativei imediatamente (0 recursos na assinatura = sem cobrança gerada, mas corrigido por precaução)
 
-Problema de tuning identificado:
+# Problema de tuning identificado:
 
-Ao mudar o lookback da regra para 24h, ela recriou o mesmo alerta a cada execução horária → 16 incidentes duplicados para o mesmo evento
-Corrigido revertendo o lookback para 1h (igual à frequência de execução)
-Fechei 15 incidentes em lote como duplicatas, triei o restante como Benign Positive
+- Ao mudar o lookback da regra para 24h, ela recriou o mesmo alerta a cada execução horária → 16 incidentes duplicados para o mesmo evento
+- Corrigido revertendo o lookback para 1h (igual à frequência de execução)
+- Fechei 15 incidentes em lote como duplicatas, triei o restante como Benign Positive
 
-Workbook criado:
+## Workbook criado:
 
-"Visão Geral - Atividade da Assinatura" com 3 gráficos: top operações, top callers, linha do tempo
+- "Visão Geral - Atividade da Assinatura" com 3 gráficos: top operações, top callers, linha do tempo
 
 
